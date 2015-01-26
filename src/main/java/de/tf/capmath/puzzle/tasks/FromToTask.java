@@ -27,6 +27,6 @@ public class FromToTask implements MathTask {
     public String generate(int result, int maxValue) {
         int a = getRandomInt(result, maxValue);
         int b = a - result;
-        return String.format("de %d\r\nà %d", b, a);
+        return String.format("de %d\nà %d", b, a);
     }
 }

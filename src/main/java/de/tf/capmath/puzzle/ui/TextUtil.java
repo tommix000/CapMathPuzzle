@@ -25,13 +25,13 @@ import java.awt.*;
 
 public class TextUtil {
 
-    public static TextOffsets getTextOffsets(Graphics g, RasterCellInfo cell, String text){
+    public static TextOffsets getTextOffsets(Graphics g, int cellSize, String text){
         FontMetrics metrics = g.getFontMetrics();
         int hgt = metrics.getHeight();
         int adv = metrics.stringWidth(text);
         Dimension textSize = new Dimension(adv, hgt);
-        int leftTextOffset = (cell.cellSize - textSize.width) / 2;
-        int topTextOffset = (cell.cellSize - textSize.height - (textSize.height / 2));
+        int leftTextOffset = (cellSize - textSize.width) / 2;
+        int topTextOffset = (cellSize - textSize.height - (textSize.height / 2));
         return new TextOffsets(leftTextOffset, topTextOffset);
     }
 

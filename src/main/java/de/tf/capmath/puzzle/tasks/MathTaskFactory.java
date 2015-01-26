@@ -21,7 +21,11 @@ package de.tf.capmath.puzzle.tasks;
 
 import de.tf.capmath.puzzle.Util;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.StreamSupport;
 
 public class MathTaskFactory {
     private static final Logger logger = Logger.getLogger(MathTaskFactory.class.getName());
@@ -35,31 +39,24 @@ public class MathTaskFactory {
             case 1:
                 return new SubtractionTask().generate(result, maxValue);
             case 2:
-                return new AdditionTask().generate(result, maxValue);
+                return new FromToTask().generate(result, maxValue);
         }
         throw new IllegalArgumentException();
     }
 
     private static int getNonMatchingValue(int[] matchingValues, int maxValue) {
-        int choices = maxValue - matchingValues.length;
-        int index = Util.getRandomInt(choices);
-        int loopIndex = 0;
+        List<Integer> choices = new ArrayList<>();
         for (int i = 0; i < maxValue; i++) {
-            if (i == index){
-                return loopIndex;
-            }
-            if (inMatchingValues(matchingValues, loopIndex)){
-                loopIndex =+ 2;
-            } else {
-                loopIndex++;
+            if (!inMatchingValues(matchingValues, i)) {
+                choices.add(i);
             }
         }
-        return 0;
+        return choices.get(Util.getRandomInt(choices.size() - 1));
     }
 
     private static boolean inMatchingValues(int[] matchingValues, int i) {
         for (int matchingValue : matchingValues) {
-            if (matchingValue == i){
+            if (matchingValue == i) {
                 return true;
             }
         }

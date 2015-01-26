@@ -24,8 +24,14 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Random;
 
 public class Util {
+    private static Random random;
+
+    static {
+        random = new Random();
+    }
 
     public static int getAverage(int[] values) {
         return Arrays.stream(values).reduce((a, b) -> a + b).getAsInt() / values.length;
@@ -35,16 +41,13 @@ public class Util {
         return ImageIO.read(testFile);
     }
 
-    public static int getRandomInt(int max){
-        double rand = Math.random();
-        double result = rand * (double)max;
-        long round = Math.round(result);
-        int ret = (int)round;
-        System.out.println(rand + " : " + result + " : " + round + " : " +  ret);
-        return ret;
+    public static int getRandomInt(int max) {
+        return getRandomInt(0, max);
     }
 
-    public static int getRandomInt(int from, int to){
-        return from + getRandomInt(to - from);
+    public static int getRandomInt(int from, int to) {
+        int randomNum = random.nextInt((to - from) + 1) + from;
+        return randomNum;
     }
+
 }

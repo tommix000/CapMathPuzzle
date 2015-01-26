@@ -32,19 +32,29 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TestFrame extends JFrame {
     private final RasterCellInfo[][] raster;
     private final int offsetLeft;
     private final int offsetTop;
-    private int[] matchingValues = new int[]{4, 7, 16};
+    private final int headerTop;
+    private int[] matchingValues = new int[]{4, 7, 16, 8};
+    private Map<Integer, Colors> colorMapping;
 
     public TestFrame(Dimension imageSize, RasterCellInfo[][] raster) {
+        colorMapping = new HashMap<>();
+        colorMapping.put(4, Colors.Blue);
+        colorMapping.put(7, Colors.Red);
+        colorMapping.put(16, Colors.Green);
+        colorMapping.put(8, Colors.Yellow);
         Dimension size = new Dimension(585, 812);
         this.setSize(size);
         this.raster = raster;
         this.offsetLeft = (585 - (int) imageSize.getWidth()) / 2;
-        this.offsetTop = 50;
+        this.offsetTop = 150;
+        this.headerTop = 50;
         addWindowListener();
     }
 
@@ -67,21 +77,46 @@ public class TestFrame extends JFrame {
     public void paint(Graphics g) {
         g.setColor(Color.white);
         g.fillRect(0, 0, this.getWidth(), this.getHeight());
+        drawHeader(g);
+        g.setColor(Color.BLACK);
         for (int i = 0; i < raster.length; i++) {
             for (int j = 0; j < raster[i].length; j++) {
                 Color color = g.getColor();
                 RasterCellInfo cell = raster[i][j];
-                String text = MathTaskFactory.createTask(false, matchingValues, 20);;
-                if (cell.containsColor) {
-                    text = MathTaskFactory.createTask(true, matchingValues, 20);
-                    g.setColor(Colors.getRandomColor());
-                    g.drawRect(offsetLeft + cell.x, offsetTop + cell.y, cell.cellSize, cell.cellSize);
-                }
-                TextUtil.TextOffsets txtOffsets = TextUtil.getTextOffsets(g, cell, text);
-                g.setColor(Color.BLACK);
-                g.drawString(text, offsetLeft + cell.x + txtOffsets.leftOffset, offsetTop + cell.y + txtOffsets.topOffset);
+                String text = MathTaskFactory.createTask(cell.containsColor ? true : false, matchingValues, 20);
+                g.drawRect(offsetLeft + cell.x, offsetTop + cell.y, cell.cellSize, cell.cellSize);
+                TextUtil.TextOffsets txtOffsets = TextUtil.getTextOffsets(g, cell.cellSize, text);
+                drawText(g, cell, text, txtOffsets);
                 g.setColor(color);
             }
+        }
+    }
+
+    private void drawHeader(Graphics g) {
+        int x = (585 - (4 * 90)) / 2;
+        Font font = g.getFont();
+        g.setFont(g.getFont().deriveFont(Font.BOLD, 25));
+        for (int i = 0; i < matchingValues.length; i++) {
+            g.setColor(colorMapping.get(Integer.valueOf(matchingValues[i])).getColor());
+            g.fillRect(x, headerTop, 60, 60);
+            g.setColor(Color.BLACK);
+            TextUtil.TextOffsets txtOffsets = TextUtil.getTextOffsets(g, 30, matchingValues[i]+"");
+            g.drawString(matchingValues[i]+"", x + txtOffsets.leftOffset + 16, headerTop + 37);
+            x += 90;
+        }
+        g.setFont(font);
+    }
+
+    private void drawText(Graphics g, RasterCellInfo cell, String text, TextUtil.TextOffsets txtOffsets) {
+        int x = offsetLeft + cell.x + txtOffsets.leftOffset;
+        int y = offsetTop + cell.y + txtOffsets.topOffset - g.getFontMetrics().getHeight();
+        if (text.contains("\n")){
+           x += 15;
+           y -= (g.getFontMetrics().getHeight() / 2);
+        }
+
+        for (String line : text.split("\n")) {
+            g.drawString(line, x, y += g.getFontMetrics().getHeight());
         }
     }
 
