@@ -34,4 +34,17 @@ public class Util {
     public static BufferedImage loadImage(File testFile) throws IOException {
         return ImageIO.read(testFile);
     }
+
+    public static int getRandomInt(int max){
+        double rand = Math.random();
+        double result = rand * (double)max;
+        long round = Math.round(result);
+        int ret = (int)round;
+        System.out.println(rand + " : " + result + " : " + round + " : " +  ret);
+        return ret;
+    }
+
+    public static int getRandomInt(int from, int to){
+        return from + getRandomInt(to - from);
+    }
 }

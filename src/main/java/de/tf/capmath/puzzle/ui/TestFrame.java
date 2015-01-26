@@ -23,6 +23,7 @@ import com.itextpdf.text.DocumentException;
 import de.tf.capmath.puzzle.color.Colors;
 import de.tf.capmath.puzzle.image.RasterCellInfo;
 import de.tf.capmath.puzzle.pdf.PdfUtil;
+import de.tf.capmath.puzzle.tasks.MathTaskFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,6 +37,7 @@ public class TestFrame extends JFrame {
     private final RasterCellInfo[][] raster;
     private final int offsetLeft;
     private final int offsetTop;
+    private int[] matchingValues = new int[]{4, 7, 16};
 
     public TestFrame(Dimension imageSize, RasterCellInfo[][] raster) {
         Dimension size = new Dimension(585, 812);
@@ -69,9 +71,9 @@ public class TestFrame extends JFrame {
             for (int j = 0; j < raster[i].length; j++) {
                 Color color = g.getColor();
                 RasterCellInfo cell = raster[i][j];
-                String text = "5 + 5";
+                String text = MathTaskFactory.createTask(false, matchingValues, 20);;
                 if (cell.containsColor) {
-                    text = "4 - 3";
+                    text = MathTaskFactory.createTask(true, matchingValues, 20);
                     g.setColor(Colors.getRandomColor());
                     g.drawRect(offsetLeft + cell.x, offsetTop + cell.y, cell.cellSize, cell.cellSize);
                 }
