@@ -37,8 +37,8 @@ public class PuzzleImageTest {
     }
 
     public static void main (String[] main) throws Exception {
-        BufferedImage image = Util.loadImage(getTestFile("/images/peace.png"));
-        PuzzleImage puzzleImage = PuzzleImage.getScaledInstance(image, 50);
+        BufferedImage image = Util.loadImage(getTestFile("/images/schiff.png"));
+        PuzzleImage puzzleImage = PuzzleImage.getScaledInstance(image, 7);
 
         RasterCellInfo[][] raster = puzzleImage.calculateRasterInfo();
 

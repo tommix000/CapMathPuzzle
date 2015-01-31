@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package de.tf.capmath.puzzle.ui;
 
 import com.itextpdf.text.DocumentException;
+import de.tf.capmath.puzzle.Util;
 import de.tf.capmath.puzzle.color.Colors;
 import de.tf.capmath.puzzle.image.RasterCellInfo;
 import de.tf.capmath.puzzle.pdf.PdfUtil;
@@ -53,7 +54,7 @@ public class TestFrame extends JFrame {
         this.setSize(size);
         this.raster = raster;
         this.offsetLeft = (585 - (int) imageSize.getWidth()) / 2;
-        this.offsetTop = 150;
+        this.offsetTop = 50;
         this.headerTop = 50;
         addWindowListener();
     }
@@ -77,16 +78,20 @@ public class TestFrame extends JFrame {
     public void paint(Graphics g) {
         g.setColor(Color.white);
         g.fillRect(0, 0, this.getWidth(), this.getHeight());
-        drawHeader(g);
+        //drawHeader(g);
         g.setColor(Color.BLACK);
         for (int i = 0; i < raster.length; i++) {
             for (int j = 0; j < raster[i].length; j++) {
                 Color color = g.getColor();
                 RasterCellInfo cell = raster[i][j];
                 String text = MathTaskFactory.createTask(cell.containsColor ? true : false, matchingValues, 20);
-                g.drawRect(offsetLeft + cell.x, offsetTop + cell.y, cell.cellSize, cell.cellSize);
+                if (cell.containsColor) {
+                    g.setColor(colorMapping.get(Integer.valueOf(matchingValues[Util.getRandomInt(3)])).getColor());
+                    g.drawRect(offsetLeft + cell.x, offsetTop + cell.y, cell.cellSize, cell.cellSize);
+                }
+
                 TextUtil.TextOffsets txtOffsets = TextUtil.getTextOffsets(g, cell.cellSize, text);
-                drawText(g, cell, text, txtOffsets);
+                //drawText(g, cell, text, txtOffsets);
                 g.setColor(color);
             }
         }
